@@ -24,7 +24,6 @@ def get_image(request):
         # print (data)       
         
     li = []
-
     for d in data['tags']:
         li.append(d['name'])
         
@@ -33,32 +32,36 @@ def get_image(request):
     count=0
     for i in li:
         count+=1
-        if(count<5):
+        if(count<4):
             dd = wikiquotes.get_quotes(i, "english")
-            #print(type(dd[0]))
-            qq = dd[0].replace('\n', ' ')
-            cap.append(qq)
+            cap.append(dd[0])
     print(cap)
 
     tone_analyzer = ToneAnalyzerV3(
         username='09ad450e-eb00-4ef4-a6ab-e51093e505c4',
         password='kGnXm8HrMFWw',
     version='2017-09-26')
-    client = textapi.Client(" 016eb657", " 590dff367360e75235f3753b78ef1488")
-
-    ret = []
 
     for c in cap:
         utterances = [{'text': c, 'user': 'trailblazerr'}]    
         rtone=  tone_analyzer.tone_chat(utterances)
-        #print(rtone["utterances_tone"][0]["tones"])
-        sent = rtone["utterances_tone"][0]["tones"]
-        sentiment = client.Hashtags({'text': c})
-        #print(sentiment['hashtags'])
-        hashtag = sentiment['hashtags']
-        ret.append({"quote": c,"sent": sent,"hashtag":hashtag})
+        #print(type(rtone))
+        sent = rtone["utterances_tone"][0]["tones"][0]["tone_name"]
+        # if(srtone["utterances_tone"][0]["tones"])
+        
+        
+    client = textapi.Client(" 016eb657", " 590dff367360e75235f3753b78ef1488")
+    sentiment = client.Hashtags({'text': cap[0]})
+    hashtag = sentiment['hashtags']
+    
+    dictt = {}
 
-    return JsonResponse(ret, safe=False)
+    dictt = {"quotes" : cap , 
+    "sent" : sent,
+    "hashtag" : hashtag}
+    print (dictt)
+
+    return JsonResponse(dictt)
 
 
 
