@@ -73,7 +73,7 @@ def get_image(request):
     count=0
     for i in li:
         count+=1
-        if(count<2):
+        if(count<5):
             dd = wikiquotes.get_quotes(i, "english")
             #print(type(dd[0]))
             qq = dd[0].replace('\n', ' ')
