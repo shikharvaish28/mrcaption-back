@@ -1,4 +1,9 @@
 from django.shortcuts import render
+import requests
+import wikiquotes
+from watson_developer_cloud import ToneAnalyzerV3
+import json
+from aylienapiclient import textapi
 from django.http import HttpResponse
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
@@ -16,5 +21,45 @@ def get_image(request):
         vision_url = "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=Categories,Tags&language=en"
         response = requests.post(vision_url, headers=headers, data=image_data)
         data = response.json()
-        # print (data)        
-        return JsonResponse(data)
+        # print (data)       
+        
+        li = []
+    for d in data['tags']:
+        li.append(d['name'])
+        
+    print(li)
+    cap = []
+    count=0
+    for i in li:
+        count+=1
+        if(count<2):
+            dd = wikiquotes.get_quotes(i, "english")
+            cap.append(dd[0])
+    print(cap)
+
+    tone_analyzer = ToneAnalyzerV3(
+        username='09ad450e-eb00-4ef4-a6ab-e51093e505c4',
+        password='kGnXm8HrMFWw',
+    version='2017-09-26')
+
+    for c in cap:
+        utterances = [{'text': c, 'user': 'trailblazerr'}]    
+        rtone=  tone_analyzer.tone_chat(utterances)
+        #print(type(rtone))
+        print(rtone["utterances_tone"][0]["tones"][0]["tone_name"])
+        # if(srtone["utterances_tone"][0]["tones"])
+        
+        
+    client = textapi.Client(" 016eb657", " 590dff367360e75235f3753b78ef1488")
+    sentiment = client.Hashtags({'text': cap[0]})
+    print(sentiment['hashtags']) 
+            
+    return JsonResponse(data)
+
+
+
+
+
+
+
+
