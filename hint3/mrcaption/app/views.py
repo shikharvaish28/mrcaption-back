@@ -8,10 +8,10 @@ def get_image(request):
     if request.method == 'POST':
         img = request.FILES["image"]
         path = default_storage.save('mrcaption/image', ContentFile(img.read()))
-        # print (type(img))
+        print (path)
         headers  = {'Ocp-Apim-Subscription-Key': '2593b2ee7a9345c7823c2dd3df0f028d',
         "Content-Type": "application/octet-stream" }
-        image_data = open('mrcaption/sv dp.jpg', "rb").read()
+        image_data = open(path , "rb").read()
         # params   = {'visualFeatures': 'Categories,Tags'}
         # data     = {'url': "mrcaption/image"}
         vision_url = "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=Categories,Tags&language=en"
