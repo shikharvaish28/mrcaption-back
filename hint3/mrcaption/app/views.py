@@ -32,7 +32,7 @@ def get_image(request):
     count=0
     for i in li:
         count+=1
-        if(count<2):
+        if(count<4):
             dd = wikiquotes.get_quotes(i, "english")
             cap.append(dd[0])
     print(cap)
@@ -46,15 +46,22 @@ def get_image(request):
         utterances = [{'text': c, 'user': 'trailblazerr'}]    
         rtone=  tone_analyzer.tone_chat(utterances)
         #print(type(rtone))
-        print(rtone["utterances_tone"][0]["tones"][0]["tone_name"])
+        sent = rtone["utterances_tone"][0]["tones"][0]["tone_name"]
         # if(srtone["utterances_tone"][0]["tones"])
         
         
     client = textapi.Client(" 016eb657", " 590dff367360e75235f3753b78ef1488")
     sentiment = client.Hashtags({'text': cap[0]})
-    print(sentiment['hashtags']) 
-            
-    return JsonResponse(data)
+    hashtag = sentiment['hashtags']
+    
+    dictt = {}
+
+    dictt = {"quotes" : cap , 
+    "sent" : sent,
+    "hashtag" : hashtag}
+    print (dictt)
+
+    return JsonResponse(dictt)
 
 
 
