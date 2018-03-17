@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> f93a55f40b32720d474b1d460c29e532ba95fd42
 asn1crypto==0.24.0
 attrs==17.4.0
 autobahn==18.3.1
