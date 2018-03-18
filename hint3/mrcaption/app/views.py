@@ -73,7 +73,7 @@ def get_image(request):
     count=0
     for i in li:
         count+=1
-        if(count<4):
+        if(count<3):
             dd = wikiquotes.get_quotes(i, "english")
             #print(type(dd[0]))
             qq = dd[0].replace('\n', ' ')
@@ -100,9 +100,10 @@ def get_image(request):
         hashtag = h["data"]
         i+=1
         for hashta in hashtag:
-            hsh.append(hashta["hashtag"])
+            hsh.append("#"+hashta["hashtag"])
         ret.append({"quote": c,"sent": sent,"hashtag":hsh})
-
+    
+    print(ret)
     return JsonResponse(ret, safe=False)
 
 
