@@ -21,7 +21,7 @@ def get_image(request):
         vision_url = "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=Categories,Tags&language=en"
         response = requests.post(vision_url, headers=headers, data=image_data)
         data = response.json()
-        # print (data)       
+        print (data)       
         
     #     li = []
     # for d in data['tags']:
@@ -73,7 +73,7 @@ def get_image(request):
     count=0
     for i in li:
         count+=1
-        if(count<2):
+        if(count<4):
             dd = wikiquotes.get_quotes(i, "english")
             #print(type(dd[0]))
             qq = dd[0].replace('\n', ' ')
@@ -87,16 +87,21 @@ def get_image(request):
     client = textapi.Client(" 016eb657", " 590dff367360e75235f3753b78ef1488")
 
     ret = []
-
+    i=0
+    hsh=[]
     for c in cap:
         utterances = [{'text': c, 'user': 'trailblazerr'}]    
         rtone=  tone_analyzer.tone_chat(utterances)
         #print(rtone["utterances_tone"][0]["tones"])
         sent = rtone["utterances_tone"][0]["tones"]
-        sentiment = client.Hashtags({'text': c})
-        #print(sentiment['hashtags'])
-        hashtag = sentiment['hashtags']
-        ret.append({"quote": c,"sent": sent,"hashtag":hashtag})
+        hh = requests.get("https://api.ritekit.com/v1/stats/hashtag-suggestions/"+li[i]+"?client_id=438d12f890281e8fde7f206aeea377f3a07a902286fb")
+        h = hh.json()
+        #print(type(h))
+        hashtag = h["data"]
+        i+=1
+        for hashta in hashtag:
+            hsh.append(hashta["hashtag"])
+        ret.append({"quote": c,"sent": sent,"hashtag":hsh})
 
     return JsonResponse(ret, safe=False)
 
